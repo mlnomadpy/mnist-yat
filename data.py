@@ -7,7 +7,7 @@ def load_data(config):
     print("Loading MNIST dataset...")
     transform = transforms.Compose([
         transforms.ToTensor(),
-        transforms.Normalize((0.1307,), (0.3081,))
+        transforms.Normalize((0.5,), (0.5,))
     ])
 
     full_train_dataset = torchvision.datasets.MNIST(root='./data', train=True, download=True, transform=transform)
@@ -24,6 +24,6 @@ def load_data(config):
 
     train_loader = torch.utils.data.DataLoader(train_dataset, batch_size=config['batch_size'], shuffle=True)
     val_loader = torch.utils.data.DataLoader(val_dataset, batch_size=config['batch_size'], shuffle=False)
-    test_loader = torch.utils.data.DataLoader(test_dataset, batch_size=1000, shuffle=False)
+    test_loader = torch.utils.data.DataLoader(test_dataset, batch_size=config['batch_size'], shuffle=False)
 
     return train_loader, val_loader, test_loader, train_dataset, test_dataset
