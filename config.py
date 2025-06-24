@@ -8,7 +8,7 @@ def get_default_config():
         'seed': 42,
         'batch_size': 128,
         'validation_split': 0.1,
-        'num_epochs': 25,
+        'num_epochs': 5,
         'lr': 0.01,
         'weight_decay': 1e-4,
         'scheduler_step': 10,
