@@ -108,16 +108,24 @@ def visualize_weights_and_prototypes(results):
     fig, axes = plt.subplots(2, 3, figsize=(24, 16), constrained_layout=True)
     fig.suptitle('Weight and Prototype Visualization - Standard vs YAT Models', fontsize=24, weight='bold')
 
-    # Standard model weights
     standard_weights = results['weight_analysis']['weights']
-    _plot_weight_templates_model(axes[0, 0], standard_weights, 'Standard Model Weights')
+    yat_weights = results['weight_analysis_yat']['weights']
+    prototypes = results['weight_analysis']['prototypes']
+
+    # Determine a global min/max for consistent colormap scaling across weights and prototypes
+    all_values = np.concatenate([standard_weights.flatten(), yat_weights.flatten(), prototypes.flatten()])
+    vmin, vmax = all_values.min(), all_values.max()
+    
+    cmap = 'viridis'
+
+    # Standard model weights
+    _plot_weight_templates_model(axes[0, 0], standard_weights, 'Standard Model Weights', cmap=cmap, vmin=vmin, vmax=vmax)
     
     # YAT model weights
-    yat_weights = results['weight_analysis_yat']['weights']
-    _plot_weight_templates_model(axes[0, 1], yat_weights, 'YAT Model Weights')
+    _plot_weight_templates_model(axes[0, 1], yat_weights, 'YAT Model Weights', cmap=cmap, vmin=vmin, vmax=vmax)
     
     # Prototypes
-    _plot_mean_prototypes(axes[0, 2], results)
+    _plot_mean_prototypes(axes[0, 2], results, cmap=cmap, vmin=vmin, vmax=vmax)
     
     # Weight differences and comparisons
     _plot_weight_differences(axes[1, 0], standard_weights, yat_weights)
@@ -133,12 +141,17 @@ def _create_image_grid(images, rows, cols):
     grid = images.reshape(rows, cols, 28, 28).swapaxes(1, 2).reshape(rows * 28, cols * 28)
     return grid
 
-def _plot_weight_templates_model(ax, weights, title):
+def _plot_weight_templates_model(ax, weights, title, cmap='viridis', vmin=None, vmax=None):
     """Enhanced weight templates visualization for a specific model."""
     grid = _create_image_grid(weights, rows=2, cols=5)
-    im = ax.imshow(grid, cmap='RdBu_r', interpolation='nearest')
+    im = ax.imshow(grid, cmap=cmap, interpolation='nearest', vmin=vmin, vmax=vmax)
     ax.set_title(title, fontsize=14, weight='bold')
     ax.axis('off')
+
+    # Add colorbar
+    fig = ax.get_figure()
+    cbar = fig.colorbar(im, ax=ax, shrink=0.8)
+    cbar.set_label('Weight Value')
 
     # Add class labels
     for i in range(10):
@@ -147,13 +160,18 @@ def _plot_weight_templates_model(ax, weights, title):
                ha='center', va='top', fontsize=10, weight='bold',
                bbox=dict(boxstyle="round,pad=0.3", facecolor='white', alpha=0.8))
 
-def _plot_mean_prototypes(ax, results):
+def _plot_mean_prototypes(ax, results, cmap='viridis', vmin=None, vmax=None):
     """Enhanced mean prototypes visualization."""
     prototypes = results['weight_analysis']['prototypes']
     grid = _create_image_grid(prototypes, rows=2, cols=5)
-    im = ax.imshow(grid, cmap='viridis', interpolation='nearest')
+    im = ax.imshow(grid, cmap=cmap, interpolation='nearest', vmin=vmin, vmax=vmax)
     ax.set_title('Class Mean Prototypes', fontsize=14, weight='bold')
     ax.axis('off')
+
+    # Add colorbar
+    fig = ax.get_figure()
+    cbar = fig.colorbar(im, ax=ax, shrink=0.8)
+    cbar.set_label('Pixel Intensity')
 
     # Add class labels
     for i in range(10):
@@ -166,7 +184,9 @@ def _plot_weight_differences(ax, standard_weights, yat_weights):
     """Plot the differences between standard and YAT model weights."""
     weight_diff = standard_weights - yat_weights
     grid = _create_image_grid(weight_diff, rows=2, cols=5)
-    im = ax.imshow(grid, cmap='RdBu_r', interpolation='nearest')
+    
+    vmax_abs = np.abs(weight_diff).max()
+    im = ax.imshow(grid, cmap='RdBu_r', interpolation='nearest', vmin=-vmax_abs, vmax=vmax_abs)
     ax.set_title('Weight Differences (Standard - YAT)', fontsize=14, weight='bold')
     ax.axis('off')
     
