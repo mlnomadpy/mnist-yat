@@ -20,6 +20,7 @@ def visualize_training_performance(results):
     _plot_training_curves_model(axes[1, 0], axes[1, 1], results['yat_training_history'], 'YAT Model')
     _plot_models_comparison(axes[1, 2], results)
 
+    plt.savefig('training_performance.png')
     plt.show()
 
 def _plot_training_curves_model(ax_loss, ax_acc, history, title_prefix):
@@ -123,6 +124,7 @@ def visualize_weights_and_prototypes(results):
     _plot_weight_norms_comparison(axes[1, 1], results)
     _plot_weight_correlation_analysis(axes[1, 2], standard_weights, yat_weights)
 
+    plt.savefig('weights_and_prototypes.png')
     plt.show()
 
 def _create_image_grid(images, rows, cols):
@@ -252,6 +254,7 @@ def visualize_similarity_analysis(results):
     for i, name in enumerate(sim_names):
         _plot_similarity_heatmap_model(axes[1, i], yat_sim_matrices[name], f'{name} - YAT Model')
 
+    plt.savefig('similarity_analysis.png')
     plt.show()
 
 def _plot_similarity_heatmap_model(ax, matrix, title):
@@ -283,6 +286,7 @@ def visualize_dimensionality_reduction(results):
     _plot_tsne_analysis(axes[1], weights, prototypes)
     _plot_clustering_analysis(axes[2], weights, prototypes)
 
+    plt.savefig('dimensionality_reduction.png')
     plt.show()
 
 def _plot_pca_analysis(ax, weights, prototypes):
@@ -357,6 +361,7 @@ def visualize_statistical_analysis(results, class_stats):
     _plot_similarity_correlations(axes[1], results)
     _plot_class_statistics(axes[2], class_stats)
 
+    plt.savefig('statistical_analysis.png')
     plt.show()
 
 def _plot_weight_norm_analysis(ax, results):
@@ -439,6 +444,7 @@ def visualize_detailed_performance(results):
     _plot_per_class_performance(axes[0], results)
     _plot_model_comparison_radar(axes[1], results)
 
+    plt.savefig('detailed_performance.png')
     plt.show()
 
 def _plot_per_class_performance(ax, results):
@@ -506,6 +512,7 @@ def visualize_error_analysis(results, test_dataset, test_loader):
     _plot_error_analysis(axes[0], results)
     _plot_misclassified_gallery(axes[1], results, test_dataset, test_loader)
 
+    plt.savefig('error_analysis.png')
     plt.show()
 
 def _plot_error_analysis(ax, results):
