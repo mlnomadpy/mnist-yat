@@ -113,7 +113,11 @@ def visualize_weights_and_prototypes(results):
     prototypes = results['weight_analysis']['prototypes']
 
     # Determine a global min/max for consistent colormap scaling across weights and prototypes
-    all_values = np.concatenate([standard_weights.flatten(), yat_weights.flatten(), prototypes.flatten()])
+    all_values = np.concatenate([standard_weights.flatten(), 
+                                 yat_weights.flatten(), 
+                                #  prototypes.flatten()
+                                 ]
+                                )
     vmin, vmax = all_values.min(), all_values.max()
     
     cmap = 'RdBu'
@@ -125,7 +129,7 @@ def visualize_weights_and_prototypes(results):
     _plot_weight_templates_model(axes[0, 1], yat_weights, 'YAT Model Weights', cmap=cmap, vmin=vmin, vmax=vmax)
     
     # Prototypes
-    _plot_mean_prototypes(axes[0, 2], results, cmap=cmap, vmin=vmin, vmax=vmax)
+    _plot_mean_prototypes(axes[0, 2], results, cmap=cmap)
     
     # Weight differences and comparisons
     _plot_weight_differences(axes[1, 0], standard_weights, yat_weights)
