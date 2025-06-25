@@ -116,7 +116,7 @@ def visualize_weights_and_prototypes(results):
     all_values = np.concatenate([standard_weights.flatten(), yat_weights.flatten(), prototypes.flatten()])
     vmin, vmax = all_values.min(), all_values.max()
     
-    cmap = 'viridis'
+    cmap = 'RdBu'
 
     # Standard model weights
     _plot_weight_templates_model(axes[0, 0], standard_weights, 'Standard Model Weights', cmap=cmap, vmin=vmin, vmax=vmax)
